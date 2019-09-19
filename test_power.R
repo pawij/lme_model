@@ -23,7 +23,7 @@ for(vIdx in 1:length(vnames)){
 
     volname=vnames[vIdx]
 
-    for(simtype in 1:1){
+    for(simtype in 1:2){
         print(volname)
         if(simtype==1){
             site.values <- c(4) # N sites
