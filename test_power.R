@@ -1,4 +1,5 @@
-# power analysis used in Predict, Track, Image-HD meta-analysis
+# Power analysis used in Predict, Track, Image-HD meta-analysis
+# Author: Peter Wijeratne (p.wijeratne@ucl.ac.uk)
 set.seed(42)
 library(nlme)
 library(lme4)

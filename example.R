@@ -1,4 +1,5 @@
-# example power analysis of treatment effect using a mixed effects model
+# Example power analysis of treatment effect using a mixed effects model
+# Author: Peter Wijeratne (p.wijeratne@ucl.ac.uk)
 set.seed(42)
 library(lme4)
 options(warn=-1)
