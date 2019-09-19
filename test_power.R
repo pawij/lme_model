@@ -1,4 +1,4 @@
-# example power analysis of treatment effect
+# power analysis used in Predict, Track, Image-HD meta-analysis
 set.seed(42)
 library(nlme)
 library(lme4)
@@ -63,22 +63,37 @@ for(vIdx in 1:length(vnames)){
         }
         # extract volume
         y = lme.data[,volname]
-        
+
         if(isLME4){
-            mod <- lmer(
-                y ~ time + age + sex + tiv + group + cag + voxel + scanner + time:age + (1 + time | site/subject),
-                                        #                y ~ time + age + sex + group + (1 + time | site/subject),
-                data = lme.data
-            )
+            if(isImaging){
+                mod <- lmer(
+                    y ~ time + age + sex + tiv + group + cag + voxel + scanner + time:age + (1 + time | site/subject), # for imaging biomarkers
+                    data = lme.data
+                )
+            } else{
+                mod <- lmer(
+                    y ~ time + age + sex + group + (1 + time | site/subject), # for clinical biomarkers
+                    data = lme.data
+                )
+            }
         } else{
-            mod <- lme(
-                y ~ time + age + sex + tiv + group + cag + voxel + scanner + time:age,
-                                        #                y ~ time + age + sex + group,
-                random = ~1 + time | site/subject,
-                data = lme.data,
-                control = lmeControl(opt = "optim",
-                                     maxIter = 800, msMaxIter = 800)
-            )
+            if(isImaging){
+                mod <- lme(
+                    y ~ time + age + sex + tiv + group + cag + voxel + scanner + time:age, # for imaging biomarkers
+                    random = ~1 + time | site/subject,
+                    data = lme.data,
+                    control = lmeControl(opt = "optim",
+                                         maxIter = 800, msMaxIter = 800)
+                )
+            } else{
+                mod <- lme(
+                    y ~ time + age + sex + group, # for clinical biomarkers
+                    random = ~1 + time | site/subject,
+                    data = lme.data,
+                    control = lmeControl(opt = "optim",
+                                         maxIter = 800, msMaxIter = 800)
+                )
+            }
         }
         #        print(summary(mod))
 
