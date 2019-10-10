@@ -1,6 +1,6 @@
 # Power analysis used in Predict, Track, Image-HD meta-analysis
 # Author: Peter Wijeratne (p.wijeratne@ucl.ac.uk)
-set.seed(42)
+set.seed(1)
 library(nlme)
 library(lme4)
 options(warn=-1)
@@ -8,9 +8,9 @@ options(warn=-1)
 ###################################################################################################
 
 isLME4=TRUE
-isImaging=TRUE
-data.path = "/home/paw/code/Python-EBM/pti_data_combined_test.csv"
-
+isImaging=FALSE
+data.path = "/home/paw/code/Python-EBM/backup/first_draft/pti_data_combined.csv"
+qc.list = read.table('/home/paw/A0_pti_paper_data/Annals_Response/qc_defacing_movement_artefact_acquisition_outlier.csv')
 ###################################################################################################
 
 if(isImaging){
@@ -23,7 +23,7 @@ for(vIdx in 1:length(vnames)){
 
     volname=vnames[vIdx]
 
-    for(simtype in 1:2){
+    for(simtype in 1:1){
         print(volname)
         if(simtype==1){
             site.values <- c(4) # N sites
@@ -41,6 +41,10 @@ for(vIdx in 1:length(vnames)){
         lme.data <- lme.data[lme.data$group!=0,]
         ##############################################################################
 
+        ############################################################################## cut QC fails
+        lme.data <- lme.data[!(lme.data$subject %in% qc.list$V1),]
+        ##############################################################################
+
         lme.data$time <- as.numeric(lme.data$time)
         lme.data$age <- as.numeric(lme.data$age)
         lme.data$tiv <- as.numeric(lme.data$tiv)
@@ -51,8 +55,7 @@ for(vIdx in 1:length(vnames)){
         lme.data$study <- factor(lme.data$study)
         lme.data$scanner <- factor(lme.data$scanner)
         lme.data$group <- factor(lme.data$group)
-        lme.data$field <- factor(lme.data$field)
-
+        lme.data$field <- factor(lme.data$field)        
         lme.data$tms <- as.numeric(lme.data$tms)
         lme.data$swrt <- as.numeric(lme.data$swrt)
         lme.data$sdmt <- as.numeric(lme.data$sdmt)
@@ -96,7 +99,7 @@ for(vIdx in 1:length(vnames)){
                 )
             }
         }
-        #        print(summary(mod))
+        print(summary(mod))
 
         getHyperparam<-function(x){
             # fixed effects
